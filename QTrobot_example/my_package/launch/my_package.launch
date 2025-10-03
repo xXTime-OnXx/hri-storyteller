@@ -1,0 +1,6 @@
+<launch>
+  <node name="my_package" pkg="my_package" type="my_ros_node.py" output="screen">
+    <param name="param1" value="QTrobot :)" />
+  </node>
+</launch>
+

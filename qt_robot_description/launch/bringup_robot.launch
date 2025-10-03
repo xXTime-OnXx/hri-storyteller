@@ -1,0 +1,14 @@
+  <launch>
+   <!-- Load the urdf into the parameter server. -->
+   <param name="robot_description" textfile="$(find qt_robot_description)/urdf/qt_robot.urdf"/>
+    
+
+   <!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/-->
+    
+   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
+      <remap from="joint_states" to="joint_states_in_radians"/>
+   </node>
+
+   <node name="joint_state_converter" pkg="qt_robot_description" type="joint_state_converter.py" />
+     <node name="rviz" pkg="rviz" type="rviz"  required="true" />
+   </launch>

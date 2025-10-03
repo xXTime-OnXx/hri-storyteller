@@ -1,0 +1,3 @@
+```
+rosrun storytelling motor.py
+```
