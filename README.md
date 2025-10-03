@@ -1,1 +1,1 @@
-https://docs.luxai.com/docs
+https://docs.luxai.com/
