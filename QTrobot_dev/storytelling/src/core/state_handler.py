@@ -1,7 +1,7 @@
 from core.state import State, StoryContext
-from services.llm_service import LLMService
-from services.robot_service import RobotService
-from services.input_service import InputService
+from service.llm_service import LLMService
+from service.robot_service import RobotService
+from service.input_service import InputService
 
 class StateHandler:
     def __init__(self, context: StoryContext, llm: LLMService, 
@@ -16,6 +16,14 @@ class StateHandler:
 
 # IntroHandler, TopicSelectionHandler, StorytellingHandler, OutroHandler
 # Also separate into multiple files
+
+class IntroHandler(StateHandler):
+    """Handles topic selection from user"""
+    
+    def handle(self) -> State:
+        self.robot.speak("Hi, I am Telly an interactive Storyteller")
+        
+        return State.TOPIC_SELECTION # Move on to the next state
 
 class TopicSelectionHandler(StateHandler):
     """Handles topic selection from user"""

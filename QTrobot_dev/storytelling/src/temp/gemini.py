@@ -4,6 +4,7 @@ import requests
 import rospy
 import json
 from std_msgs.msg import String
+from qt_robot_interface.srv import speech_config, speech_say
 
 class GeminiAdapter:
     def __init__(self, model_name="gemini-2.5-flash:generateContent"):
@@ -52,25 +53,52 @@ class GeminiAdapter:
             rospy.logerr(f"Unexpected response structure: {json.dumps(data)}")
             raise
 
+def set_speech_config(lang_code="en-GB", pitch=-1, speed=-2, voice="en-GB-Ryan"):
+    """
+    Configure QTrobot TTS for a smooth, clear male English voice.
+    - lang_code: language/accent
+    - pitch: -3 to +3 (negative = deeper)
+    - speed: -3 to +3 (negative = slower)
+    - voice: specific Acapela male voice
+    """
+    rospy.wait_for_service('/qt_robot/speech/config')
+    try:
+        speech_config_srv = rospy.ServiceProxy('/qt_robot/speech/config', speech_config)
+        speech_config_srv(lang_code, pitch, speed)
+
+        # Set voice param if supported
+        try:
+            rospy.set_param("/qt_robot/speech/voice", voice)
+            rospy.loginfo(f"QTrobot voice set to {voice} ({lang_code}), pitch {pitch}, speed {speed}")
+        except Exception as e:
+            rospy.logwarn(f"Could not set /qt_robot/speech/voice param: {e}")
+
+    except rospy.ServiceException as e:
+        rospy.logerr(f"Failed to set speech config: {e}")
+
 def talk_text(pub, text):
+    """Publish speech text to QTrobot."""
     text = text[:200]
     msg = String()
     msg.data = text
     pub.publish(msg)
     rospy.loginfo(f"Published to /qt_robot/behavior/talkText: {text}")
 
-
 if __name__ == "__main__":
     rospy.init_node("gemini_adapter_pub")
     
-    # Publisher for QTrobot speech
     talk_pub = rospy.Publisher("/qt_robot/behavior/talkText", String, queue_size=10)
-    rospy.sleep(1)  # Give ROS time to register the publisher
-    
+    rospy.sleep(1)
+
+    # Set smooth male English voice ("Ryan" - British accent)
+    set_speech_config(lang_code="en-GB", pitch=-1, speed=-2, voice="en-GB-Ryan")
+
     adapter = GeminiAdapter()
-    prompt = "Hello! Let's start a story about QTrobot. QTrobot discovers a new emotion for the first time."
-    
+    prompt = "Hello! Let's start a story about QTrobot discovering new emotions."
+
     try:
+        processing = "I'm generating your story now."
+        talk_text(talk_pub, processing)
         story = adapter.request(prompt)
         rospy.loginfo(f"Generated text:\n{story}")
         talk_text(talk_pub, story)
