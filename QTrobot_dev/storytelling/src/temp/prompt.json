@@ -1,0 +1,21 @@
+{
+    "story_chunks": [
+        {
+            "text": "Hallo bli bla blub",
+            "emotion": "QT/happy",
+            "gesture": "QT/HI"
+        },
+        {
+            "text": "Hallo bli bla blub",
+            "emotion": "QT/happy",
+            "gesture": "QT/HI"
+        }
+    ],
+    "choices": [
+        {
+            "id": 1,
+            "text": "fight with dragon"
+        }
+
+    ]
+}

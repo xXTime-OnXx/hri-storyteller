@@ -54,13 +54,6 @@ class GeminiAdapter:
             raise
 
 def set_speech_config(lang_code="en-GB", pitch=-1, speed=-2, voice="en-GB-Ryan"):
-    """
-    Configure QTrobot TTS for a smooth, clear male English voice.
-    - lang_code: language/accent
-    - pitch: -3 to +3 (negative = deeper)
-    - speed: -3 to +3 (negative = slower)
-    - voice: specific Acapela male voice
-    """
     rospy.wait_for_service('/qt_robot/speech/config')
     try:
         speech_config_srv = rospy.ServiceProxy('/qt_robot/speech/config', speech_config)
@@ -94,7 +87,57 @@ if __name__ == "__main__":
     set_speech_config(lang_code="en-GB", pitch=-1, speed=-2, voice="en-GB-Ryan")
 
     adapter = GeminiAdapter()
-    prompt = "Hello! Let's start a story about QTrobot discovering new emotions."
+    prompt = """ROLE: You are a QT-robot storyteller for children.
+    TASK:  
+    1) Ask the user for:  
+        a) a few words to include in the story  
+        b) confirm that you will detect objects in the room
+
+    2) After the user provides the words, create a story that contains:  
+        - the given words  
+        - detected objects (pretend they were detected)  
+
+    3) You must split the story into chunks.  
+        EACH chunk must contain:
+            - "text": string to speak
+            - "emotion": one of: ["QT/happy","QT/sad","QT/angry","QT/surprised","QT/neutral"]
+            - "gesture": one of: ["QT/HI","QT/WAVE","QT/NOD","QT/SHAKE","QT/IDLE"]
+
+    4) After the story chunks, present choices to continue the story.  
+        EACH choice must contain:
+            - "id": integer
+            - "text": one sentence option
+            - "emotion": same scheme as above
+            - "gesture": same scheme as above
+
+CRITICAL OUTPUT RULES:
+- You MUST return a single valid JSON object, and nothing else.
+- Do not add explanation or extra text outside JSON.
+- Do not break JSON with comments or trailing commas.
+
+OUTPUT STRUCTURE (exact shape):
+{
+  "story_chunks": [
+    {
+      "text": "...",
+      "emotion": "...",
+      "gesture": "..."
+    }
+  ],
+  "choices": [
+    {
+      "id": 1,
+      "text": "...",
+      "emotion": "...",
+      "gesture": "..."
+    }
+  ]
+}
+
+AFTER the user selects a choice:
+- Generate a NEW full JSON response with a continuation of the story in the same format.
+- Do not repeat the old JSON, only the new continuation.
+"""
 
     try:
         processing = "I'm generating your story now."

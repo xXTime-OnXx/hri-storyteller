@@ -15,6 +15,8 @@ class RobotService:
 
         # Publishers
         self.talk_pub = rospy.Publisher("/qt_robot/behavior/talkText", String, queue_size=10)
+        self.emotion_publisher = rospy.Publisher('/qt_robot/emotion/show', String, queue_size=10)
+        self.gesture_publisher = rospy.Publisher('/qt_robot/gesture/play', String, queue_size=10)
 
         # wait for services and publishers
         rospy.sleep(1)  # Give ROS time to register the publisher
@@ -31,12 +33,28 @@ class RobotService:
         rospy.loginfo(f"Published to /qt_robot/behavior/talkText: {text}")
     
     def show_emotion(self, emotion: str):
-        # TODO: Replace with QT-Robot emotion API
-        print(f"[ROBOT EMOTION]: {emotion}")
+        """
+        Show emotion on QT Robot asynchronously via ROS publisher
+        
+        Args:
+            emotion: Emotion name (e.g., 'QT/happy', 'QT/sad', 'QT/happy_blinking')
+        """
+        rospy.loginfo(f"[ROBOT EMOTION]: {emotion}")
+        msg = String()
+        msg.data = emotion
+        self.emotion_publisher.publish(msg)
     
     def gesture(self, gesture_name: str):
-        # TODO: Replace with QT-Robot gesture API
-        print(f"[ROBOT GESTURE]: {gesture_name}")
+        """
+        Perform gesture on QT Robot asynchronously via ROS publisher
+        
+        Args:
+            gesture_name: Gesture name (e.g., 'QT/happy', 'QT/Fly', 'QT/hands-on-belly')
+        """
+        rospy.loginfo(f"[ROBOT GESTURE]: {gesture_name}")
+        msg = String()
+        msg.data = gesture_name
+        self.gesture_publisher.publish(msg)
     
     def parallel_output(self, text: str, emotion: str = "happy", gesture: str = None):
         # TODO: check if works and think how to track if an emotion / gesture is done or not

@@ -6,7 +6,7 @@ class State(Enum):
     TOPIC_SELECTION = "topic_selection"
     STORYTELLING = "storytelling"
     OUTRO = "outro"
-    FINISHED = "finished"
+    IDLE = "idle"
 
 class StoryContext:
     def __init__(self):
