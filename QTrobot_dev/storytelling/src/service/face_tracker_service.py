@@ -1,14 +1,9 @@
-#!/usr/bin/env python
-
 import rospy
 from std_msgs.msg import Float64MultiArray
-from qt_nuitrack_app.msg import Faces # Using the message type you confirmed
+from qt_nuitrack_app.msg import Faces
 
-class FaceTracker(object):
+class FaceTrackerService:
     def __init__(self):
-        rospy.init_node('face_tracker_node')
-        rospy.loginfo("Starting Face Tracker Node...")
-
         self.pan_gain = rospy.get_param('~pan_gain', -75.0)
         self.tilt_gain = rospy.get_param('~tilt_gain', 40.0)
 
@@ -21,17 +16,31 @@ class FaceTracker(object):
         self.tilt_min = rospy.get_param('~tilt_min', -25.0) # Min Pitch (down)
         self.tilt_max = rospy.get_param('~tilt_max', 15.0)  # Max Pitch (up)
 
-        # === Publisher ===
         self.head_pub = rospy.Publisher('/qt_robot/head_position/command', 
                                         Float64MultiArray, 
                                         queue_size=1)
 
-        # === Subscriber ===
+        self.emotion_data = []
+
+    def start_face_tracking(self):
         self.face_sub = rospy.Subscriber('/qt_nuitrack_app/faces',
                                          Faces, 
                                          self.face_callback)
-        
-        rospy.loginfo("Tracker initialized. Waiting for 2D face data...")
+
+    def stop_face_tracking(self):
+        self.emotion_data = []
+        self.face_sub.unregister()
+
+    def get_emotion(self):
+        emotion_scores = {
+            "neutral": max(emotion.emotion_neutral for emotion in self.emotion_data),
+            "angry": max(emotion.emotion_angry for emotion in self.emotion_data),
+            "happy": max(emotion.emotion_happy for emotion in self.emotion_data),
+            "surprise": max(emotion.emotion_surprise for emotion in self.emotion_data)
+        }
+
+        self.emotion_data = []
+        return max(emotion_scores, key=emotion_scores.get)
 
     def face_callback(self, msg):
         if not msg.faces:
@@ -74,11 +83,4 @@ class FaceTracker(object):
         #))
         
         self.head_pub.publish(head_msg)
-
-
-if __name__ == '__main__':
-    try:
-        FaceTracker()
-        rospy.spin()
-    except rospy.ROSInterruptException:
-        rospy.loginfo("Face tracker node shut down.")
+        self.emotion_data.append(face)

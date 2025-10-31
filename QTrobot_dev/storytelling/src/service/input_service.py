@@ -1,13 +1,13 @@
 import rospy
 from typing import Optional
-from qt_vosk_app.srv import *
+from custom_interfaces.srv import MicrophoneBasedSpeechRecognition
 
 class InputService:
     """Handles user input through speech or object detection"""
     def __init__(self):
         try:
-            self.stt_service = rospy.ServiceProxy('/qt_robot/speech/recognize', speech_recognize)
-            rospy.wait_for_service('/qt_robot/speech/recognize')
+            rospy.wait_for_service('/custom/speech/sr/microphone_recognize')
+            self.stt_service = rospy.ServiceProxy('/custom/speech/sr/microphone_recognize', MicrophoneBasedSpeechRecognition)
             rospy.loginfo("Speech services connected successfully.")
         except rospy.ServiceException as e:
             rospy.logerr(f"Failed to create service proxies: {e}")
@@ -22,14 +22,14 @@ class InputService:
             language = "en-US" 
             timeout = 10
 
-            response = self.stt_service(language, ["green", "blue"], timeout)
+            response = self.stt_service(language)
+
+            rospy.loginfo(response)
             
-            if response and response.transcript:
-                user_input = response.transcript.strip()
+            if response and response.text:
+                user_input = response.text
                 if user_input:
                     rospy.loginfo(f"[USER SAID]: {user_input}")
-                else:
-                    rospy.loginfo("[ROBOT]: I heard something, but it was empty.")
             else:
                 rospy.loginfo("[ROBOT]: I didn't hear anything.")
         except rospy.ServiceException as e:

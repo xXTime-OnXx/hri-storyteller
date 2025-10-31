@@ -1,3 +1,2 @@
-```
-rosrun storytelling motor.py
+``
 ```

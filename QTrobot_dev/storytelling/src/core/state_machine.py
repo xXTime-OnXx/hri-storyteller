@@ -9,7 +9,7 @@ from core.state.idle_state_handler import IdleHandler
 from service.llm_service import LLMService
 from service.robot_service import RobotService
 from service.input_service import InputService
-
+from service.face_tracker_service import FaceTrackerService
 
 class StorytellerStateMachine:
     """Main state machine - now just coordinates state handlers"""
@@ -20,14 +20,15 @@ class StorytellerStateMachine:
         self.llm = LLMService()
         self.robot = RobotService()
         self.input_service = InputService()
+        self.face_tracker = FaceTrackerService()
         
         # Map states to their handlers
         self.handlers = {
-            State.INTRO: IntroHandler(self.context, self.llm, self.robot, self.input_service),
-            State.TOPIC_SELECTION: TopicSelectionHandler(self.context, self.llm, self.robot, self.input_service),
-            State.STORYTELLING: StorytellingHandler(self.context, self.llm, self.robot, self.input_service),
-            State.OUTRO: OutroHandler(self.context, self.llm, self.robot, self.input_service),
-            State.IDLE: IdleHandler(self.context, self.llm, self.robot, self.input_service),
+            State.INTRO: IntroHandler(self.context, self.llm, self.robot, self.input_service, self.face_tracker),
+            State.TOPIC_SELECTION: TopicSelectionHandler(self.context, self.llm, self.robot, self.input_service, self.face_tracker),
+            State.STORYTELLING: StorytellingHandler(self.context, self.llm, self.robot, self.input_service, self.face_tracker),
+            State.OUTRO: OutroHandler(self.context, self.llm, self.robot, self.input_service, self.face_tracker),
+            State.IDLE: IdleHandler(self.context, self.llm, self.robot, self.input_service, self.face_tracker),
         }
     
     def run(self):

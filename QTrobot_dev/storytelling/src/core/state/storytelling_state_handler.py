@@ -8,7 +8,7 @@ class StorytellingHandler(StateHandler):
 
     def handle(self) -> State:
         # TODO: overwrite topic temporarily
-        self.context.topic = "Dragon"
+        # self.context.topic = "Dragon"
 
         # Generate story chunk
         if not self.context.story_history:

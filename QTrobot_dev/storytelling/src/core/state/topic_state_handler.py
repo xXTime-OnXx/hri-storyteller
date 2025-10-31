@@ -12,7 +12,9 @@ class TopicSelectionHandler(StateHandler):
         topic = self.input_service.get_speech_input()
 
         # TODO: remove hardcoded topic after input service is implemented
-        topic = "Dragons, Adventure, Mystic"
+
+        if not topic:
+            topic = "Dragons, Adventure, Mystic"
         
         # Fallback to object detection if no speech
         if not topic:

@@ -18,11 +18,8 @@ def create_storytelling_prompt(topic):
                     "QT/scream", "QT/showing_smile", "QT/shy", "QT/talking", "QT/with_a_cold", 
                     "QT/with_a_cold_cleaning_nose", "QT/with_a_cold_sneezing", "QT/yawn"]
             - "gesture": one of: ["QT/hi", "QT/bye-bye", "QT/clapping", "QT/one-arm-up", "QT/point_front", 
-                    "QT/neutral", "QT/up_right", "QT/show_tablet", "QT/show_QT", "QT/kiss", 
-                    "QT/peekaboo", "QT/hands-on-hip", "QT/hands-on-belly", "QT/hands-up", 
-                    "QT/hands-side", "QT/head-right-left", "QT/nodding-yes", "QT/hands-on-head", 
-                    "QT/breathing_exercise", "QT/personal-distance", "QT/shy", "QT/surprised", 
-                    "QT/disgusted", "QT/calm", "QT/afraid", "QT/sad", "QT/happy", "QT/hoora", 
+                    "QT/neutral", "QT/up_right", "QT/show_tablet", "QT/show_QT", "QT/kiss", "QT/peekaboo", 
+                    "QT/breathing_exercise", "QT/personal-distance", "QT/sad", "QT/happy", 
                     "QT/show_right", "QT/bye", "QT/yawn", "QT/hand-front-hold", "QT/WavingRightArm", 
                     "QT/Phone_call", "QT/Beep", "QT/Drive", "QT/Fly", "QT/Beeping", "QT/Driving", 
                     "QT/drink", "QT/show_left", "QT/sneezing", "QT/send_kiss", "QT/surprise", 
