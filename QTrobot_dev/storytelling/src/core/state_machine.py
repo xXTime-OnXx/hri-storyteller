@@ -15,7 +15,7 @@ class StorytellerStateMachine:
     """Main state machine - now just coordinates state handlers"""
     
     def __init__(self):
-        self.state = State.STORYTELLING
+        self.state = State.INTRO
         self.context = StoryContext()
         self.llm = LLMService()
         self.robot = RobotService()

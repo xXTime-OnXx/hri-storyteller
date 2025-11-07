@@ -7,9 +7,6 @@ class StorytellingHandler(StateHandler):
     """Handles main storytelling loop"""
 
     def handle(self) -> State:
-        # TODO: overwrite topic temporarily
-        # self.context.topic = "Dragon"
-
         # Generate story chunk
         if not self.context.story_history:
             chunk = self.llm.request(create_storytelling_prompt(self.context.topic))
@@ -23,7 +20,9 @@ class StorytellingHandler(StateHandler):
         
         # Tell the story chunk
         for part in chunk['story_chunks']:
+            self.face_tracker.start_face_tracking()
             self.robot.parallel_output(part['text'], emotion=part['emotion'], gesture=part['gesture'])
+            self.face_tracker.stop_face_tracking()
 
         # TODO: check if story should end?
         

@@ -1,22 +1,27 @@
 import pyttsx3
 import os
+from pydub import AudioSegment
+import subprocess
 
-output_folder = "/root/catkin_ws/src/QTrobot_dev/storytelling/src/temp"
-os.makedirs(output_folder, exist_ok=True)
+text = "Hello Timon! Do you like this new voice?"
+wav_file = "/root/catkin_ws/src/hello.wav"
 
+# Initialize TTS engine
 engine = pyttsx3.init()
 
-# List and choose a voice
+# Set voice (male)
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)  # pick a different voice
+for voice in voices:
+    if "male" in voice.name.lower():  # simple filter for male voices
+        engine.setProperty('voice', voice.id)
+        break
 
-# Optional: adjust rate and volume
-engine.setProperty('rate', 100)
-engine.setProperty('volume', 0.8)
+# Set speech rate (slower for storytelling feel)
+engine.setProperty('rate', 140)  # default is ~200
 
-# Save TTS to WAV (pyttsx3 does not support MP3 directly)
-output_file = os.path.join(output_folder, "hello.wav")
-engine.save_to_file("Hello from QTrobot with a new voice!", output_file)
+# Save to WAV
+engine.save_to_file(text, wav_file)
 engine.runAndWait()
 
-print(f"Saved WAV to {output_file}")
+# Play WAV using ROS service
+subprocess.run(["rosservice", "call", "/qt_robot/audio/play_local_file", f"'{wav_file}'"])

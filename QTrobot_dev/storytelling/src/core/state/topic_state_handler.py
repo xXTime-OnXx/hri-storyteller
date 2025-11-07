@@ -10,16 +10,11 @@ class TopicSelectionHandler(StateHandler):
         
         # Try speech first
         topic = self.input_service.get_speech_input()
-
-        # TODO: remove hardcoded topic after input service is implemented
-
-        if not topic:
-            topic = "Dragons, Adventure, Mystic"
         
         # Fallback to object detection if no speech
-        if not topic:
-            self.robot.speak("Let me see what you're showing me...")
-            topic = self.input_service.detect_object()
+        # if not topic:
+        #    self.robot.speak("Let me see what you're showing me...")
+        #    topic = self.input_service.detect_object()
         
         if topic:
             self.context.topic = topic
@@ -27,6 +22,7 @@ class TopicSelectionHandler(StateHandler):
                 f"Great! Let me tell you a story about {topic}",
                 emotion="excited"
             )
+            #return State.IDLE
             return State.STORYTELLING
         else:
             self.robot.speak("I didn't catch that. Let's try again.")
