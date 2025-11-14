@@ -16,7 +16,7 @@ class IdleHandler(StateHandler):
             self.face_tracker.stop_face_tracking()
             return State.INTRO # Move on to the next state
 
-        rospy.sleep(5.0) # wait for detection to run again
+        rospy.sleep(10.0) # wait for detection to run again
         return State.IDLE
 
         

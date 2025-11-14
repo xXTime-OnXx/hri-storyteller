@@ -12,6 +12,7 @@ python3 /root/catkin_ws/src/QTrobot_dev/storytelling/src/temp/voices.py
 
 TODO: Find a new voice, which fits the storyteller (male, natural, good to understand)
 
+TODO: rosservice -> rostopic
 
 
 ## Storytelling Prgoram
