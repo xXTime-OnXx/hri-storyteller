@@ -12,6 +12,7 @@ class RobotService:
     
         # services
         self.speechSay = rospy.ServiceProxy('/qt_robot/speech/say', speech_say)
+        self.audioPlay = rospy.ServiceProxy('/qt_robot/audio/play', audio_play)
 
         # Publishers
         self.talk_pub = rospy.Publisher("/qt_robot/behavior/talkText", String, queue_size=10)
@@ -21,10 +22,14 @@ class RobotService:
         # wait for services and publishers
         rospy.sleep(1)  # Give ROS time to register the publisher
         rospy.wait_for_service('/qt_robot/speech/say')
+        rospy.wait_for_service('/qt_robot/audio/play')
     
     def speak(self, text: str):
         self.speechSay(text)
         rospy.loginfo(f"Called service /qt_robot/speech/say: {text}")
+
+    def speak_audio(self, state: str):
+        self.audioPlay(state + '.wav', '/home/developer')
 
     def speak_async(self, text: str):
         msg = String()

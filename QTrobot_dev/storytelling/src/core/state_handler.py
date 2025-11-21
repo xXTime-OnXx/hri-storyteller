@@ -13,6 +13,7 @@ class StateHandler:
         self.robot = robot
         self.input_service = input_service
         self.face_tracker = face_tracker
+        self.story_count = 0
     
     def handle(self) -> State:
         raise NotImplementedError

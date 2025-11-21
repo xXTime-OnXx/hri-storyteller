@@ -6,12 +6,11 @@ class TopicSelectionHandler(StateHandler):
     """Handles topic selection from user"""
     
     def handle(self) -> State:
-        self.robot.speak("What would you like the story to be about?")
+        self.robot.speak_audio(State.TOPIC_SELECTION.value)
         
-        # Try speech first
         topic = self.input_service.get_speech_input()
         
-        # Fallback to object detection if no speech
+        # TODO: Fallback to object detection if no speech
         # if not topic:
         #    self.robot.speak("Let me see what you're showing me...")
         #    topic = self.input_service.detect_object()

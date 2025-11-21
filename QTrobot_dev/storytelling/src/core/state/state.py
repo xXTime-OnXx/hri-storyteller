@@ -19,5 +19,5 @@ class StoryContext:
         self.story_history.append(chunk)
         self.current_chunk = chunk
     
-    def get_full_story(self) -> str:
+    def get_full_story(self):
         return "\n\n".join(self.story_history)
