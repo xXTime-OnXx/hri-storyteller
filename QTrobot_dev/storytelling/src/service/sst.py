@@ -14,7 +14,6 @@ if __name__ == '__main__':
 
         rospy.spin()
 
-
         #rospy.loginfo("--- Starting simple conversation ---")
         
         #input_1 = input_handler.get_speech_input()

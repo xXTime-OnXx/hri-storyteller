@@ -32,6 +32,9 @@ class FaceTrackerService:
         self.face_sub.unregister()
 
     def get_emotion(self):
+        if self.emotion_data == []:
+            return None
+            
         emotion_scores = {
             "neutral": max(emotion.emotion_neutral for emotion in self.emotion_data),
             "angry": max(emotion.emotion_angry for emotion in self.emotion_data),

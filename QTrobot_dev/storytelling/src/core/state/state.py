@@ -14,10 +14,11 @@ class StoryContext:
         self.story_history: List[str] = []
         self.current_chunk: Optional[str] = None
         self.user_last_choice: str = ""
+        self.current_choices: List[str] = []
     
     def add_chunk(self, chunk: str):
-        self.story_history.append(chunk)
+        self.story_history.extend([chunk])
         self.current_chunk = chunk
     
-    def get_full_story(self) -> str:
+    def get_full_story(self):
         return "\n\n".join(self.story_history)

@@ -5,7 +5,6 @@ class IntroHandler(StateHandler):
     """Handles topic selection from user"""
     
     def handle(self) -> State:
-        self.robot.speak("Hi, I am Telly an interactive Storyteller")
+        self.robot.speak_audio(State.INTRO.value)
 
-        return State.TOPIC_SELECTION # Move on to the next state
-        
+        return State.TOPIC_SELECTION
