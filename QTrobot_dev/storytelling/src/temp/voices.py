@@ -4,6 +4,8 @@ import time
 
 start_time = time.time()
 
+start_time = time.time()
+
 text = "Test, Test, I'm only Testing!"
 
 # Final WAV filename (will contain adjusted speed and volume)

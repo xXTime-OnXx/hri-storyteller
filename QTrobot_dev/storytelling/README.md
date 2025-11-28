@@ -14,6 +14,8 @@ TODO: Find a new voice, which fits the storyteller (male, natural, good to under
 
 TODO: rosservice -> rostopic
 
+TODO: push waiting audios to PC and implement logic to integrate them
+
 TODO: implement logic to integrate waiting wavs
 
 
