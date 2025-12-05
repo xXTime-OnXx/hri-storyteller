@@ -9,7 +9,6 @@ class StorytellingHandler(StateHandler):
 
     def handle(self) -> State:
         # Generate story chunk
-
         if not self.context.topic:
             self.context.topic = "Dragons"        
         if not self.context.story_history:
@@ -28,6 +27,8 @@ class StorytellingHandler(StateHandler):
                     self.context.user_last_choice
                 ))
         
+        self.robot.play_waiting_file()
+        
         # Tell the story chunk
         for part in chunk['story_chunks']:
             self.context.add_chunk(part['text'])
@@ -41,17 +42,18 @@ class StorytellingHandler(StateHandler):
 
         # tell next story options
         options = [choice['text'] for choice in chunk['choices']]
+        print(options)
         self.context.current_choices = "\n\n ".join(options)
-        print(self.context.current_choices)
-        options_text = "What should happen next? " + ", ".join(
-            [f"{i+1}: {opt}" for i, opt in enumerate(options)]
-        )
-        self.robot.speak(options_text)
+
+        options_text = [f"{i+1}: {opt}" for i, opt in enumerate(options)]
+        
+        print(options_text)
+        self.robot.parallel_output("What should happen next? " + options_text)
         
         user_choice = self.input_service.get_speech_input()
         
         if not user_choice:
-            self.robot.speak("Let me decide for you...")
+            self.robot.parallel_output("Let me decide for you...")
             user_choice = random.choice(options) 
         
         self.context.user_last_choice = user_choice

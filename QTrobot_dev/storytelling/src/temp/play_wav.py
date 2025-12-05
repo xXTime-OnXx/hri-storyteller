@@ -3,6 +3,12 @@ import rospy
 from std_srvs.srv import Trigger, TriggerResponse
 import subprocess
 
+def main():
+    rospy.init_node("wav_player_service")
+    srv = rospy.Service("/play_wav", Trigger, handle_play_wav)
+    rospy.loginfo("Ready to play WAV file on Qt PC.")
+    rospy.spin()
+
 def handle_play_wav(req):
     wav_path = "/root/catkin_ws/hello.wav"
     try:

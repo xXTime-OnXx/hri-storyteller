@@ -21,7 +21,7 @@ class TopicSelectionHandler(StateHandler):
                 f"Great! Let me tell you a story about {topic}",
                 emotion="excited"
             )
-            #return State.IDLE
+
             return State.STORYTELLING
         else:
             self.robot.speak("I didn't catch that. Let's try again.")
