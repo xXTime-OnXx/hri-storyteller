@@ -30,7 +30,6 @@ class FaceManager:
                 self.faces[face_id] = Person(
                     id=face_id,
                     gender=attributes["dominant_gender"],
-                    race=attributes["dominant_race"],
                     emotion=attributes["dominant_emotion"],
                     region=attributes["region"]
                 )
@@ -44,7 +43,7 @@ class FaceManager:
 
         return active_faces
 
-    def set_name(self, id, name):
+    def register_new_face(self, id, name):
         person = self.faces[id]
         person.name = name
 

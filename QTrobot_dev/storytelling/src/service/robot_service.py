@@ -10,6 +10,8 @@ from TTS.api import TTS
 import subprocess
 import asyncio
 
+from queue import Queue
+
 class RobotService:
     """Abstraction for QT-Robot API"""
     def __init__(self):
@@ -37,9 +39,11 @@ class RobotService:
         self.tts = TTS(model_name="tts_models/en/vctk/vits", progress_bar=False, gpu=False)
         self.speaker_id = "p230"  # male voice
         rospy.loginfo("TTS model loaded.")
+
+        self.audio_queue = Queue()
     
     def generate_file(self, text: str, speed: float = 0.9, volume_db: int = 5):
-        wav_file = "/root/catkin_ws/src/audios/test.wav"
+        wav_file = f"/root/catkin_ws/src/audios/{time.time()}.wav"
 
         # Load Coqui TTS model
         tts = TTS(model_name="tts_models/en/vctk/vits", progress_bar=False, gpu=False)
@@ -70,13 +74,14 @@ class RobotService:
 
         return wav_file
 
-    def play_file(self, wav_file):
+    def play_file(self, wav_file, delete = False):
         # Play the final adjusted file
         subprocess.run([
             "rosservice", "call",
             "/qt_robot/audio/play_local_file",
             wav_file
         ])
+        #TODO: Delete File if delete is true
 
     def play_waiting_file(self):
         
@@ -99,7 +104,7 @@ class RobotService:
         self.talk_pub.publish(text)
         rospy.loginfo(f"Published to /qt_robot/behavior/talkText: {text}")
     
-    def show_emotion(self, emotion: str):
+    def show_emotion(self, emotion: str, talk: bool = False):
         """
         Show emotion on QT Robot asynchronously via ROS publisher
         
@@ -110,6 +115,10 @@ class RobotService:
         msg = String()
         msg.data = emotion
         self.emotion_publisher.publish(msg)
+        if talk:
+            msg = String()
+            msg.data = "QT/talking"
+            self.emotion_publisher.publish(msg)
     
     def gesture(self, gesture_name: str):
         """
@@ -132,3 +141,23 @@ class RobotService:
         if gesture:
             self.gesture(gesture)
         self.play_file(wav_file)
+
+    def generate_audio_to_queue(self, text: str):
+        wav_file = self.generate_file(text)
+        self.audio_queue.put(wav_file)
+
+    def parallel_output_from_queue(self, emotion: str = "happy", gesture: str = None):
+        # TODO: check if works and think how to track if an emotion / gesture is done or not
+        """Coordinate parallel outputs"""
+        wav_file = None
+        while wav_file is None:
+            print(self.audio_queue.empty())
+            if not self.audio_queue.empty():
+                wav_file = self.audio_queue.get()
+            else:
+                time.sleep(1)
+            
+        self.show_emotion(emotion, True)
+        if gesture:
+            self.gesture(gesture)
+        self.play_file(wav_file, True)

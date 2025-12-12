@@ -2,15 +2,14 @@ import rospy
  
 class Person:
  
-    def __init__(self, id, gender, race, emotion, region):
+    def __init__(self, id, gender, emotion, region):
         self.id = id
         self.gender = gender
-        self.race = race
         self.emotion = emotion
         self.region = region
         self.last_ineraction = None #Gets set later
         self.name = None #Gets set later
-        self.sexual_orientation = None
+        self.encoding = None
    
     def timeout_active(self):
         if self.last_ineraction is None:

@@ -22,8 +22,8 @@ class HeadController:
         # Gains (How fast it moves)
         # If it oscillates (shakes head), lower these numbers.
         # If it's too slow, increase them.
-        self.KP_X = 0.1
-        self.KP_Y = 0.1
+        self.KP_X = 0.01
+        self.KP_Y = 0.01
  
         # Internal State (Where we think the head is)
         self.current_yaw = 0.0

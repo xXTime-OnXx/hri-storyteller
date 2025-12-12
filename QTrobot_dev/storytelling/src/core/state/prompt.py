@@ -20,11 +20,10 @@ def create_storytelling_prompt(topic):
             - "gesture": one of: ["QT/hi", "QT/bye-bye", "QT/clapping", "QT/one-arm-up", "QT/point_front", 
                     "QT/neutral", "QT/up_right", "QT/show_tablet", "QT/show_QT", "QT/kiss", "QT/peekaboo", 
                     "QT/breathing_exercise", "QT/personal-distance", "QT/sad", "QT/happy", 
-                    "QT/show_right", "QT/bye", "QT/yawn", "QT/hand-front-hold", "QT/WavingRightArm", 
-                    "QT/Phone_call", "QT/Beep", "QT/Drive", "QT/Fly", "QT/Beeping", "QT/Driving", 
-                    "QT/drink", "QT/show_left", "QT/sneezing", "QT/send_kiss", "QT/surprise", 
-                    "QT/monkey", "QT/stretching", "QT/up_left", "QT/swipe_right", "QT/swipe_left", 
-                    "QT/touch-head"]  
+                    "QT/show_right", "QT/bye", "QT/yawn", "QT/WavingRightArm", "QT/Phone_call", 
+                    "QT/Beep", "QT/Drive", "QT/Fly", "QT/Beeping", "QT/Driving", "QT/drink", 
+                    "QT/show_left", "QT/sneezing", "QT/send_kiss", "QT/surprise", "QT/monkey", 
+                    "QT/stretching", "QT/up_left", "QT/swipe_right", "QT/swipe_left", "QT/touch-head"]  
 
 
         3) After all story chunks, present multiple choices to continue the story.
@@ -84,7 +83,7 @@ def create_continuation_prompt(story_history, choices, choice):
             - "gesture": one of: ["QT/hi", "QT/bye-bye", "QT/clapping", "QT/one-arm-up", "QT/point_front", 
                     "QT/neutral", "QT/up_right", "QT/show_tablet", "QT/show_QT", "QT/kiss", "QT/peekaboo", 
                     "QT/breathing_exercise", "QT/personal-distance", "QT/sad", "QT/happy", 
-                    "QT/show_right", "QT/bye", "QT/yawn", "QT/hand-front-hold", "QT/WavingRightArm", 
+                    "QT/show_right", "QT/bye", "QT/yawn", "QT/WavingRightArm", 
                     "QT/Phone_call", "QT/Beep", "QT/Drive", "QT/Fly", "QT/Beeping", "QT/Driving", 
                     "QT/drink", "QT/show_left", "QT/sneezing", "QT/send_kiss", "QT/surprise", 
                     "QT/monkey", "QT/stretching", "QT/up_left", "QT/swipe_right", "QT/swipe_left", 
@@ -149,7 +148,7 @@ def create_end_prompt(story_history, choices, choice):
             - "gesture": one of: ["QT/hi", "QT/bye-bye", "QT/clapping", "QT/one-arm-up", "QT/point_front", 
                     "QT/neutral", "QT/up_right", "QT/show_tablet", "QT/show_QT", "QT/kiss", "QT/peekaboo", 
                     "QT/breathing_exercise", "QT/personal-distance", "QT/sad", "QT/happy", 
-                    "QT/show_right", "QT/bye", "QT/yawn", "QT/hand-front-hold", "QT/WavingRightArm", 
+                    "QT/show_right", "QT/bye", "QT/yawn", "QT/WavingRightArm", 
                     "QT/Phone_call", "QT/Beep", "QT/Drive", "QT/Fly", "QT/Beeping", "QT/Driving", 
                     "QT/drink", "QT/show_left", "QT/sneezing", "QT/send_kiss", "QT/surprise", 
                     "QT/monkey", "QT/stretching", "QT/up_left", "QT/swipe_right", "QT/swipe_left", 

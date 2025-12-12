@@ -8,7 +8,7 @@ import re
 class LLMService:
     """Handles all LLM interactions for story generation"""
     
-    def __init__(self, model_name="gemini-2.5-flash:generateContent"):
+    def __init__(self, model_name="gemini-2.5-flash-lite:generateContent"):
             self.api_key = os.environ.get("GENAI_API_KEY")
             if not self.api_key:
                 raise Exception("GENAI_API_KEY environment variable not set")

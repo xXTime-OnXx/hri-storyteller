@@ -17,6 +17,9 @@ class InteractionManager:
         GREET_KNOWN = auto()
         ENCOURAGE = auto()
         COMPLIMENT = auto()
+        SMALL_TALK = auto()
+        GOODBYE = auto()
+        INTRODUCTION = auto()
 
     def __init__(self, brain):
         self.brain = brain
@@ -106,6 +109,16 @@ class InteractionManager:
 
                 elif step == self.Type.COMPLIMENT:
                     self._script_compliment(person)
+                
+                elif step == self.Type.SMALL_TALK:
+                    self._script_small_talk(person)
+
+                elif step == self.Type.GOODBYE:
+                    self._script_farewell(person)
+
+                elif step == self.Type.INTRODUCTION:
+                    self._script_introduce_unknown(person)
+
                     
                 # Add a small natural pause between steps so it doesn't sound robotic
                 rospy.sleep(0.5)
@@ -122,7 +135,7 @@ class InteractionManager:
     # ================================================================
 
     def _script_greet_unknown(self, person):
-        intro = "Good day, Madam." if person.gender == "Woman" else "Good day, Sir."
+        intro = "Good day, Madam." if person.gender == "female" else "Good day, Sir."
         self._say(intro)
         self._say("I do not believe we have met.")
         self._say("May I inquire as to your name?")
@@ -132,37 +145,81 @@ class InteractionManager:
         name_raw = self._clean_name(resp.transcript if resp else "")
 
         if not name_raw:
-            self._say("Forgive me, I did not catch that.", "bye-bye")
+            self._say("Forgive me, I did not catch that.", "QT/Dance-1-2")
             return
 
         # Optional verification
         if not self._verify_name(name_raw):
-            self._say("My apologies. I will try to learn your name another time.", "bye-bye")
+            self._say("My apologies. I will try to learn your name another time.", "QT/Waving_rightArm")
             return
 
         # Save name
         person.name = name_raw
-        self.brain.register_new_person(person.id, name_raw)
+        self.brain.register_new_person(person)
 
         self._say(f"A pleasure to meet you, {name_raw}.")
 
     def _script_greet_known(self, person):
         name = person.name or ("Sir" if person.gender == "Man" else "Ma'am")
         self._say(f"Welcome back, {name}.")
-        if(person.name == 'Marco'):
-            self._say("i didnt know youre into men.", "monkey")
 
     def _script_encourage(self, person):
         line = random.choice(self.encouragements)
-        self._say(line, ".shoot.xml")
+        self._say(line, "QT/.shoot.xml")
 
     def _script_compliment(self, person):
         if person.emotion == "happy":
             line = random.choice(self.compliments_smile)
-            self._say(line, "happy")
+            self._say(line, "QT/happy")
         else:
             line = random.choice(self.compliments_general)
-            self._say(line, "Fly")
+            self._say(line, "QT/Fly")
+    
+    def _script_small_talk(self, person):
+        self._say("May I ask you something?")
+        resp = self._listen(options=["yes", "no"], timeout=5)
+
+        if not resp or "no" in resp.transcript.lower():
+            self._say("Very well. If you ever wish to chat, I shall be here.")
+            return
+
+        # Step 2: Ask a general question
+        self._say("How is your day going so far?")
+        answer = self._listen(options=[], timeout=10)
+
+        if not answer or not answer.transcript:
+            self._say("I see. Perhaps it is a quiet day.")
+            return
+
+        text = answer.transcript.lower()
+
+        # Step 3: Simple response classification
+        if any(w in text for w in ["good", "great", "fine", "nice", "amazing", "okay"]):
+            self._say("I am delighted to hear that.")
+        elif any(w in text for w in ["bad", "tired", "sad", "not good", "awful"]):
+            self._say("I am sorry to hear that. I hope things improve soon.")
+        else:
+            self._say("That sounds interesting. Thank you for sharing.")
+    
+    def _script_farewell(self, person):
+        farewell_lines = [
+            "May your steps today lead you toward something meaningful.",
+            "Wisdom grows in quiet moments. I hope you find a few today.",
+            "Take good care of yourself. Small acts of kindness matter most.",
+            "May calm thoughts guide your choices and brighten your path.",
+            "Remember, even a brief moment of stillness can renew the mind.",
+            "Strength often comes from patience, not haste. Walk gently.",
+        ]
+
+        line = random.choice(farewell_lines)
+
+        # Optional: add a gesture (just an example — choose one your robot has)
+        self._say(line + person.name if person.is_known() else "", gesture_name="QT/wave")
+    
+    def _script_introduce_unknown(self, person):
+        self._say(f'Allow me to introduce myself {person.name}. I am QT Bot, your household butler, here to assist you with courtesy and reliability.')
+        self._say(f'It is a pleasure to make your acquaintance, {person.name}. I look forward to assisting you whenever you may need me.', 'QT/happy')
+
         
 
     # ================================================================
@@ -200,3 +257,4 @@ class InteractionManager:
         if not text:
             return None
         return text.split()[-1].strip(",.!?").capitalize()
+

@@ -1,5 +1,5 @@
 import rospy
-from FaceManager import FaceManager
+from FaceManager2 import FaceManager
 from InteractionManager import InteractionManager
 from HeadController import HeadController
 from Person import Person
@@ -33,11 +33,12 @@ class ButlerBrain:
 
     def run(self):
         #default pose
-        self.talk_srv("Robo Ranger")
-        self.gesture_srv("dab", 0) 
+        #self.talk_srv("Robo Ranger")
+        self.gesture_srv("QT/neutral", 0) 
 
         while not rospy.is_shutdown():
             active_faces = self.fm.get_active_faces()
+            print(active_faces)
             
             if self.current_target is not None:
                 # Update current_target's coordinates from the live feed
@@ -88,20 +89,20 @@ class ButlerBrain:
 
         sequence = []
 
-        # 1. First: Decide the greeting
         if person.is_known():
             sequence.append(InteractionManager.Type.GREET_KNOWN)
+
+            if person.emotion == 'sad':
+                sequence.append(InteractionManager.Type.ENCOURAGE)
+            else:
+                sequence.append(InteractionManager.Type.COMPLIMENT)
+
+            sequence.append(InteractionManager.Type.SMALL_TALK)
+            sequence.append(InteractionManager.Type.GOODBYE)
         else:
             sequence.append(InteractionManager.Type.GREET_UNKNOWN)
+            sequence.append(InteractionManager.Type.INTRODUCTION)
 
-        # 2. Second: Add 'flavor' based on emotion
-        if person.emotion == 'sad':
-            sequence.append(InteractionManager.Type.ENCOURAGE)
-        else:
-            sequence.append(InteractionManager.Type.COMPLIMENT)
-
-        # 3. Execute the chain
-        # e.g. [GREET_KNOWN, COMPLIMENT]
         self.im.start_interaction(person, sequence)
 
 
@@ -109,9 +110,10 @@ class ButlerBrain:
         person.last_ineraction = rospy.get_time()
         self.current_target = None
         self.state = self.State.IDLE
+        self.gesture_srv("QT/neutral", 0) 
     
-    def register_new_person(self, id, name):
-        self.fm.set_name(id, name)
+    def register_new_person(self, person):
+        self.fm.register_new_face(person)
 
 if __name__ == "__main__":
     br = ButlerBrain()
